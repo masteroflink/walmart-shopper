@@ -1,0 +1,10 @@
+# Re-include .claude/ (the global gitignore excludes it), then drop machine-local files.
+!.claude/
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+.claude/worktrees/
+# Run logs are local-only output; keep the folder, not the files.
+runs/*
+!runs/.gitkeep
+__pycache__/
+.DS_Store
