@@ -30,7 +30,15 @@ Confirm the list reads:
 scripts/get_list.sh
 ```
 
-The procedure the job follows is the `cart-fill` skill in this repo (`.claude/skills/cart-fill/SKILL.md`). Create the daily job in the Claude desktop app with a one-line prompt: "Read `<repo>/.claude/skills/cart-fill/SKILL.md` and follow it exactly." The task itself is stored as `~/.claude/scheduled-tasks/walmart-cart-fill/SKILL.md` and runs at 8 AM local while the app is open. If the app is closed at 8 AM, the run fires on next launch. Click "Run now" once from the Scheduled sidebar to pre-approve browser permissions.
+Register the daily job. Open the repo in the Claude desktop app (Code tab) and run:
+
+```
+/setup-schedule
+```
+
+That creates (or updates) the `walmart-cart-fill` task: 8 AM local, pointing at this clone's `.claude/skills/cart-fill/SKILL.md`, which holds the full procedure and is versioned here. The task runs while the app is open; a missed 8 AM run fires on next launch. Click "Run now" once from the Scheduled sidebar to pre-approve browser permissions.
+
+The job runs on Claude Sonnet 5.5, set in `.claude/settings.json`. Change `model` there to trade cost for capability.
 
 ## Usage
 
@@ -66,6 +74,8 @@ Lookup is exact after normalization: lowercase, punctuation stripped, leading co
 | `pins.json` | Pinned items, keyed by normalized list word |
 | `rules.md` | Ranking rules for unpinned items |
 | `.claude/skills/cart-fill/` | `/cart-fill` skill: the full daily procedure the scheduled job runs |
+| `.claude/skills/setup-schedule/` | `/setup-schedule` skill: registers the daily task for this clone |
+| `.claude/settings.json` | Project model (`claude-sonnet-5-5`) |
 | `.claude/skills/pin/` | `/pin` skill for pinning a product to a list word |
 | `runs/` | Per-run logs (gitignored) |
 | `test_list.txt` | Sample list used for the first prototype |

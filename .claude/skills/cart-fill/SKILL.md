@@ -5,7 +5,7 @@ description: Fill the walmart.com cart from the Apple Reminders "Grocery" list. 
 
 # /cart-fill
 
-Project root: `/Users/bruce/Documents/projects/walmart_buyer`. Never use `cd`; use absolute paths. Use Claude in Chrome (`mcp__claude-in-chrome__*`, the user's logged-in Chrome), NOT the built-in browser. Load the Chrome tools with one ToolSearch call:
+`<repo>` below is the repository root: the directory three levels above this file (`<repo>/.claude/skills/cart-fill/SKILL.md`). Resolve it to an absolute path once, then substitute it everywhere. Never use `cd`; use absolute paths. Use Claude in Chrome (`mcp__claude-in-chrome__*`, the user's logged-in Chrome), NOT the built-in browser. Load the Chrome tools with one ToolSearch call:
 
 ```
 select:mcp__claude-in-chrome__tabs_context_mcp,mcp__claude-in-chrome__navigate,mcp__claude-in-chrome__computer,mcp__claude-in-chrome__find,mcp__claude-in-chrome__get_page_text,mcp__claude-in-chrome__browser_batch,mcp__claude-in-chrome__javascript_tool,mcp__claude-in-chrome__tabs_close_mcp
@@ -15,9 +15,9 @@ Also load `PushNotification` via ToolSearch.
 
 ## 1. Read inputs
 
-- Items: run `/Users/bruce/Documents/projects/walmart_buyer/scripts/get_list.sh` (one open Reminders "Grocery" item per line). If empty, write a short run log saying "list empty, nothing done" and stop. Do not ping.
-- Rules: read `/Users/bruce/Documents/projects/walmart_buyer/rules.md` and follow it exactly (Delivery from local store only, cheapest unit price, single pack, size cap, qty 1, plain meaning, skip-and-report when unclear).
-- Pins: for each item run `python3 /Users/bruce/Documents/projects/walmart_buyer/scripts/pins.py lookup "<item>"`. Exit 0 means pinned: use the `url` field and skip search. Exit 1 means unpinned: search.
+- Items: run `<repo>/scripts/get_list.sh` (one open Reminders "Grocery" item per line). If empty, write a short run log saying "list empty, nothing done" and stop. Do not ping.
+- Rules: read `<repo>/rules.md` and follow it exactly (Delivery from local store only, cheapest unit price, single pack, size cap, qty 1, plain meaning, skip-and-report when unclear).
+- Pins: for each item run `python3 <repo>/scripts/pins.py lookup "<item>"`. Exit 0 means pinned: use the `url` field and skip search. Exit 1 means unpinned: search.
 
 ## 2. Record cart before
 
@@ -37,7 +37,7 @@ Open a Chrome tab on `https://www.walmart.com/search?q=bread` (any page) and use
    ```js
    [...document.querySelectorAll('a[href*="/ip/"]')].map(a=>a.getAttribute('href').split('?')[0]).find(h=>/<loose slug fragment>/i.test(h))?.split('/').pop()
    ```
-6. On verified add only: run `/Users/bruce/Documents/projects/walmart_buyer/scripts/complete_item.sh "<exact item text from get_list.sh>"`.
+6. On verified add only: run `<repo>/scripts/complete_item.sh "<exact item text from get_list.sh>"`.
 
 ## 4. Record cart after
 
@@ -45,7 +45,7 @@ Re-read the header cart button. Record items and $ total.
 
 ## 5. Log
 
-Write `/Users/bruce/Documents/projects/walmart_buyer/runs/<YYYY-MM-DD>-daily.md` (append a numbered suffix if it exists). Run logs are local-only and gitignored. Format:
+Write `<repo>/runs/<YYYY-MM-DD>-daily.md` (append a numbered suffix if it exists). Run logs are local-only and gitignored. Format:
 
 - Title line with date and "daily".
 - "Cart before: N items / $X. After: N items / $Y."
