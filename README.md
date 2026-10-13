@@ -5,7 +5,7 @@ Fills a walmart.com cart from an Apple Reminders grocery list. Say "Hey Siri, ad
 ## Architecture
 
 ```mermaid
-flowchart LR
+flowchart TB
     subgraph input [Input]
         Siri["Siri / Reminders app"] --> Rem[("Apple Reminders<br/>list: Grocery")]
     end
