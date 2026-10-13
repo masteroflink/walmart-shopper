@@ -30,7 +30,7 @@ Confirm the list reads:
 scripts/get_list.sh
 ```
 
-Create the daily job in the Claude desktop app by asking it to schedule the cart fill. The task is stored as `~/.claude/scheduled-tasks/walmart-cart-fill/SKILL.md` and runs at 8 AM local while the app is open. If the app is closed at 8 AM, the run fires on next launch. Click "Run now" once from the Scheduled sidebar to pre-approve browser permissions.
+The procedure the job follows is the `cart-fill` skill in this repo (`.claude/skills/cart-fill/SKILL.md`). Create the daily job in the Claude desktop app with a one-line prompt: "Read `<repo>/.claude/skills/cart-fill/SKILL.md` and follow it exactly." The task itself is stored as `~/.claude/scheduled-tasks/walmart-cart-fill/SKILL.md` and runs at 8 AM local while the app is open. If the app is closed at 8 AM, the run fires on next launch. Click "Run now" once from the Scheduled sidebar to pre-approve browser permissions.
 
 ## Usage
 
@@ -65,7 +65,8 @@ Lookup is exact after normalization: lowercase, punctuation stripped, leading co
 | `scripts/pins.py` | Add, look up, and list pinned Walmart item IDs |
 | `pins.json` | Pinned items, keyed by normalized list word |
 | `rules.md` | Ranking rules for unpinned items |
-| `.claude/skills/pin/` | `/pin` skill for the Claude Code CLI |
+| `.claude/skills/cart-fill/` | `/cart-fill` skill: the full daily procedure the scheduled job runs |
+| `.claude/skills/pin/` | `/pin` skill for pinning a product to a list word |
 | `runs/` | Per-run logs (gitignored) |
 | `test_list.txt` | Sample list used for the first prototype |
 
