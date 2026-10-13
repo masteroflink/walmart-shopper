@@ -16,7 +16,7 @@ flowchart TB
         Pins -->|item ID| Chrome
         Rules -->|cheapest match| Chrome["walmart.com<br/>logged-in Chrome"]
         Chrome -->|verified add| Done["complete_item.sh"]
-        Chrome -->|"cart > $45"| Push["Push notification<br/>desktop + phone"]
+        Chrome -->|"cart > $45"| Push["Push notification<br/>desktop + ntfy phone"]
         Skill -->|write| Log[("runs/*.md<br/>local only")]
     end
 
@@ -30,7 +30,7 @@ flowchart TB
 2. **Pins.** Each item is checked against `pins.json`. A pinned item maps straight to a Walmart item ID, so the exact product is added with no search.
 3. **Search.** Unpinned items are searched on walmart.com and ranked by `rules.md`: delivery from the local store only, cheapest unit price, single pack, size cap, plain meaning of the word.
 4. **Add and verify.** The item is added through Claude in Chrome (your logged-in browser). The add is verified against the cart badge and quantity stepper before the reminder is marked complete (`scripts/complete_item.sh`).
-5. **Log and ping.** A run log is written to `runs/` (local only, gitignored). If the cart total is over $45, a push notification goes to the Claude desktop and mobile app.
+5. **Log and ping.** A run log is written to `runs/` (local only, gitignored). If the cart total is over $45, a notification goes to the Claude desktop app (`PushNotification`) and, when `CLAUDE_NTFY_TOPIC` is set, to your phone through ntfy. Without the topic, only the desktop notification is sent.
 
 ## Requirements
 
@@ -61,6 +61,16 @@ Register the daily job. Open the repo in the Claude desktop app (Code tab) and r
 That creates (or updates) the `walmart-cart-fill` task: 8 AM local, pointing at this clone's `.claude/skills/cart-fill/SKILL.md`, which holds the full procedure and is versioned here. The task runs while the app is open; a missed 8 AM run fires on next launch. Click "Run now" once from the Scheduled sidebar to pre-approve browser permissions.
 
 The job runs on Claude Sonnet 5.5, set in `.claude/settings.json`. Change `model` there to trade cost for capability.
+
+Phone alerts use [ntfy](https://ntfy.sh). Install the ntfy app, subscribe to a topic name you choose (anyone who knows the name can read the messages, so make it unguessable), then set that name as `CLAUDE_NTFY_TOPIC` in the `env` block of `.claude/settings.local.json`:
+
+```json
+{
+  "env": {
+    "CLAUDE_NTFY_TOPIC": "your-topic-name"
+  }
+}
+```
 
 ## Usage
 

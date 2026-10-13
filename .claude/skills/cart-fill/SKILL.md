@@ -58,7 +58,12 @@ Do not write the store address into the log.
 
 ## 6. Ping rule
 
-If the cart total after the run is OVER $45.00, call `PushNotification` (status "proactive") with one line: `Walmart cart $<total>, <n> items. Added: <comma list>. Skipped: <comma list or none>.` If the total is $45.00 or under, send no notification at all.
+If the cart total after the run is OVER $45.00, send the same one-line message two ways:
+
+1. Call `PushNotification` (status "proactive") with: `Walmart cart $<total>, <n> items. Added: <comma list>. Skipped: <comma list or none>.`
+2. If `CLAUDE_NTFY_TOPIC` is set, post the same line to it, which reaches the phone without Remote Control: `[ -n "$CLAUDE_NTFY_TOPIC" ] && curl -s -o /dev/null --max-time 10 -H "Title: Walmart cart" -H "Tags: shopping_cart" -d "<same line>" "https://ntfy.sh/$CLAUDE_NTFY_TOPIC"`. If it is unset, skip this step.
+
+If the total is $45.00 or under, send no notification at all.
 
 ## 7. Cleanup
 
