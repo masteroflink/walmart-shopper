@@ -2,6 +2,29 @@
 
 Fills a walmart.com cart from an Apple Reminders grocery list. Say "Hey Siri, add eggs to my Grocery list", and a daily job adds the cheapest matching item for store delivery, marks the reminder done, and pings your phone when the cart passes a threshold. You still check out by hand.
 
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph input [Input]
+        Siri["Siri / Reminders app"] --> Rem[("Apple Reminders<br/>list: Grocery")]
+    end
+
+    subgraph app [Claude desktop app, daily 8 AM]
+        Task["Scheduled task<br/>walmart-cart-fill"] -->|reads| Skill["cart-fill skill<br/>.claude/skills/cart-fill"]
+        Skill -->|get_list.sh| Rem
+        Skill -->|pins.py lookup| Pins[("pins.json")]
+        Skill -->|unpinned| Rules["rules.md<br/>rank by unit price"]
+        Skill -->|Claude in Chrome| Chrome["walmart.com<br/>logged-in Chrome"]
+        Chrome -->|verified add| Done["complete_item.sh"]
+        Done --> Rem
+        Skill -->|write| Log[("runs/*.md<br/>local only")]
+        Skill -->|cart > $45| Push["Push notification<br/>desktop + phone"]
+    end
+
+    Chrome -.->|you check out| You((You))
+```
+
 ## How it works
 
 1. **List intake.** Items are read from the Reminders list named `Grocery` on the Mac (`scripts/get_list.sh`). Siri, the Reminders app, or the command line can add to it.
