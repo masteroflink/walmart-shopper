@@ -6,22 +6,21 @@ Fills a walmart.com cart from an Apple Reminders grocery list. Say "Hey Siri, ad
 
 ```mermaid
 flowchart TB
-    subgraph input [Input]
-        Siri["Siri / Reminders app"] --> Rem[("Apple Reminders<br/>list: Grocery")]
-    end
+    Siri["Siri / Reminders app"] --> Rem[("Apple Reminders<br/>list: Grocery")]
+    Rem -->|"get_list.sh"| Skill
 
-    subgraph app [Claude desktop app, daily 8 AM]
+    subgraph app ["Claude desktop app, daily 8 AM"]
         Task["Scheduled task<br/>walmart-cart-fill"] -->|reads| Skill["cart-fill skill<br/>.claude/skills/cart-fill"]
-        Skill -->|get_list.sh| Rem
-        Skill -->|pins.py lookup| Pins[("pins.json")]
+        Skill -->|"pins.py lookup"| Pins[("pins.json")]
         Skill -->|unpinned| Rules["rules.md<br/>rank by unit price"]
-        Skill -->|Claude in Chrome| Chrome["walmart.com<br/>logged-in Chrome"]
+        Pins -->|item ID| Chrome
+        Rules -->|cheapest match| Chrome["walmart.com<br/>logged-in Chrome"]
         Chrome -->|verified add| Done["complete_item.sh"]
-        Done --> Rem
+        Chrome -->|"cart > $45"| Push["Push notification<br/>desktop + phone"]
         Skill -->|write| Log[("runs/*.md<br/>local only")]
-        Skill -->|cart > $45| Push["Push notification<br/>desktop + phone"]
     end
 
+    Done -.->|marks complete| Rem
     Chrome -.->|you check out| You((You))
 ```
 
